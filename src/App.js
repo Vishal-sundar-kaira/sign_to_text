@@ -11,13 +11,8 @@ function App() {
   const canvasRef = useRef(null);
   const [predictions, setPredictions] = useState([]);
   const [curr, setCurr] = useState();
-  const class_names = [
-    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-    'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-    'nothing', 'space', 'del'
-  ];
+
     // Function to update predicted word based on the most frequent letter
-    
     
   
     // Function to handle delete button click
@@ -90,7 +85,7 @@ const convertToSpeech = () => {
     }, 2000);
   
     return () => clearInterval(intervalId);
-  }, [curr]); // Include predictions in the dependency array to monitor changes in predictions array
+  }, [curr,predictions]); // Include predictions in the dependency array to monitor changes in predictions array
   
 
   const detect = async (net, GE) => {
@@ -140,7 +135,7 @@ const convertToSpeech = () => {
 
   useEffect(() => {
     runHandpose();
-  }, []);
+  });
 
   return (
     <div className="App">
