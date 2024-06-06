@@ -32,7 +32,8 @@ const handleSpace = () => {
 //stop camera 
 const toggledetect = () => {
   // setdetectit((prevDetectit) => !prevDetectit);
-  detectit=!detectit
+  if(detectit===true){setdetectit(false)}
+  else {setdetectit(true)}
   detectitRef.current = !detectitRef.current;
   if (!detectitRef.current) {
     const ctx = canvasRef.current.getContext("2d");
