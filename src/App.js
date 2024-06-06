@@ -13,6 +13,7 @@ function App() {
   const [curr, setCurr] = useState();
   const[loaded,setloaded]=useState(false);
   const detectitRef = useRef(true);
+  const[detectit,setdetectit]=useState(true)
     // Function to update predicted word based on the most frequent letter
     
     // Function to handle delete button click
@@ -31,6 +32,7 @@ const handleSpace = () => {
 //stop camera 
 const toggledetect = () => {
   // setdetectit((prevDetectit) => !prevDetectit);
+  detectit=!detectit
   detectitRef.current = !detectitRef.current;
   if (!detectitRef.current) {
     const ctx = canvasRef.current.getContext("2d");
@@ -183,7 +185,7 @@ const runHandpose = async () => {
             Convert to Speech
           </button>
           <button onClick={toggledetect} style={{ margin: "2px" }}>
-            {detectitRef.current===true ? "Stop Detection" : "Start Detection"}
+            {detectit===true ? "Stop Detection" : "Start Detection"}
           </button>
         </div>
       </div>
