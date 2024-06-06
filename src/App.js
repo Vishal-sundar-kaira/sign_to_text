@@ -183,7 +183,7 @@ const runHandpose = async () => {
             Convert to Speech
           </button>
           <button onClick={toggledetect} style={{ margin: "2px" }}>
-            {detectitRef.current ? "Stop Detection" : "Start Detection"}
+            {detectitRef.current===true ? "Stop Detection" : "Start Detection"}
           </button>
         </div>
       </div>
