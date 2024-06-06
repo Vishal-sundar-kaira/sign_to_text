@@ -11,10 +11,11 @@ function App() {
   const canvasRef = useRef(null);
   const [predictions, setPredictions] = useState([]);
   const [curr, setCurr] = useState();
-
+  const[detectit,setdetectit]=useState(true);
+  const[loaded,setloaded]=useState(false);
+  const detectitRef = useRef(true);
     // Function to update predicted word based on the most frequent letter
     
-  
     // Function to handle delete button click
 const handleDelete = () => {
   setPredictions(prevPredictions => {
@@ -28,14 +29,23 @@ const handleDelete = () => {
 const handleSpace = () => {
   setPredictions(prevPredictions => [...prevPredictions, " "]); // Add a space element to the predictions list
 };
-
+//stop camera 
+const toggledetect = () => {
+  console.log("detectit",detectit)
+  // setdetectit((prevDetectit) => !prevDetectit);
+  detectitRef.current = !detectitRef.current;
+  if (!detectitRef.currrent) {
+    const ctx = canvasRef.current.getContext("2d");
+    ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+  }
+};
 const convertToSpeech = () => {
   const speechSynthesis = window.speechSynthesis;
   const utterance = new SpeechSynthesisUtterance(predictions.join(''));
   speechSynthesis.speak(utterance);
 };
 
-  const runHandpose = async () => {
+const runHandpose = async () => {
     await tf.ready();
     console.log("TensorFlow.js loaded.");
     const net = await handpose.load();
@@ -72,7 +82,10 @@ const convertToSpeech = () => {
     console.log("Fingerpose model loaded.");
 
     setInterval(() => {
-      detect(net, GE);
+      if(detectitRef.current){
+        console.log(detectit.current)
+        detect(net, GE);
+      }
     }, 100);
 
  
@@ -106,6 +119,7 @@ const convertToSpeech = () => {
       
       const hand = await net.estimateHands(video);
       console.log("hand", hand);
+      setloaded(true);
   
       if (hand.length > 0) {
         const estimatedGestures = await GE.estimate(hand[0].landmarks, 6.5);
@@ -132,33 +146,52 @@ const convertToSpeech = () => {
     }
   };
   
-
   useEffect(() => {
     runHandpose();
   });
 
   return (
     <div className="App">
-      <header className="App-header">
-        <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
+    <header className="App-header">
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <div
+          style={{
+            position: "relative",
+            width: "100%",
+            maxWidth: "640px",
+            marginTop: "15px",
+            marginBottom:"0px"
+          }}
+        >
           <Webcam
             ref={webcamRef}
-            style={{ zIndex: 9, width: 640, height: 480 }}
+            style={{ width: "100%", height: "auto", zIndex: 9 }}
           />
           <canvas
             ref={canvasRef}
-            style={{ position: "absolute", top: 0, left: 0, zIndex: 9, width: 640, height: 480 }}
+            style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: 9 }}
           />
         </div>
-        <div style={{ marginTop: "20px" }}>
-          <p>Predicted Word: {predictions.join('')}</p>
-          <p>Predicted Word: {curr}</p>
-          <button onClick={handleDelete} style={{ margin: "5px" }}>Delete</button>
-          <button onClick={handleSpace} style={{ margin: "5px" }}>Space</button>
-          <button onClick={convertToSpeech} style={{ margin: "5px" }}>Convert to Speech</button>
+        <div style={{ width: "100%", maxWidth: "640px" }}>
+         {loaded ?  "":<p>Few seconds to load our model...</p>}
+          <p>Predicted Word: {predictions.join("")}</p>
+          <p>Current Prediction: {curr}</p>
+          <button onClick={handleDelete} style={{ margin: "2px" }}>
+            Delete
+          </button>
+          <button onClick={handleSpace} style={{ margin: "2px" }}>
+            Space
+          </button>
+          <button onClick={convertToSpeech} style={{ margin: "2px" }}>
+            Convert to Speech
+          </button>
+          <button onClick={toggledetect} style={{ margin: "2px" }}>
+            {detectitRef.current ? "Stop Detection" : "Start Detection"}
+          </button>
         </div>
-      </header>
-    </div>
+      </div>
+    </header>
+  </div>
   );
 }
 
