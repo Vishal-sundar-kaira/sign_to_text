@@ -170,7 +170,7 @@ const runHandpose = async () => {
           />
         </div>
         <div style={{ width: "100%", maxWidth: "640px" }}>
-         {loaded ?  "":<p>Few seconds to load our model...</p>}
+         {loaded ?  "":<p>Hold tight! Our model is gearing up to bridge the communication gap...</p>}
           <p>Predicted Word: {predictions.join("")}</p>
           <p>Current Prediction: {curr}</p>
           <button onClick={handleDelete} style={{ margin: "2px" }}>
