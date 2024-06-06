@@ -11,7 +11,6 @@ function App() {
   const canvasRef = useRef(null);
   const [predictions, setPredictions] = useState([]);
   const [curr, setCurr] = useState();
-  const[detectit,setdetectit]=useState(true);
   const[loaded,setloaded]=useState(false);
   const detectitRef = useRef(true);
     // Function to update predicted word based on the most frequent letter
@@ -31,10 +30,9 @@ const handleSpace = () => {
 };
 //stop camera 
 const toggledetect = () => {
-  console.log("detectit",detectit)
   // setdetectit((prevDetectit) => !prevDetectit);
   detectitRef.current = !detectitRef.current;
-  if (!detectitRef.currrent) {
+  if (!detectitRef.current) {
     const ctx = canvasRef.current.getContext("2d");
     ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
   }
@@ -83,7 +81,6 @@ const runHandpose = async () => {
 
     setInterval(() => {
       if(detectitRef.current){
-        console.log(detectit.current)
         detect(net, GE);
       }
     }, 100);
